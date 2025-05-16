@@ -1,0 +1,290 @@
+server:
+  address: 0.0.0.0
+  port: 8881
+  sessionTimeout: 30
+  tomcat:
+    connection-timeout: 30
+    keep-alive-timeout: 30
+spring:
+  profiles: dev
+  #  aop:
+  #    auto: true
+  #    proxy-target-class: false
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    #    prefix: pamirs
+    timeout: 2000
+    #password: shushi@2019
+    #  cluster:
+    #    nodes:
+    #      - 127.0.0.1:6379
+    #    timeout: 2000
+    #    max-redirects: 7
+    jedis:
+      pool:
+        # 连接池中的最大空闲连接 默认8
+        max-idle: 16
+        # 连接池中的最小空闲连接 默认0
+        min-idle: 1
+        # 连接池最大连接数 默认8 ，负数表示没有限制
+        max-active: 16
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认-1
+        max-wait: 2000
+  rocketmq:
+    name-server: 127.0.0.1:9876
+    producer:
+      enableMsgTrace: true
+      customizedTraceTopic: TRACE_PRODUCER
+    consumer:
+      enableMsgTrace: true
+      customizedTraceTopic: TRACE_CONSUMER
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      value-serializer: pro.shushi.pamirs.framework.connectors.event.kafka.marshalling.PamirsKafkaMarshalling
+    consumer:
+      group-id: ${spring.application.name}
+      value-deserializer: pro.shushi.pamirs.framework.connectors.event.kafka.marshalling.PamirsKafkaMarshalling
+  rabbitmq:
+    host: 192.168.1.149
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      direct:
+        # 消息开启手动确认
+        acknowledge-mode: manual
+  jmx:
+    enabled: false
+logging:
+  level:
+    root: info
+    pro.shushi.pamirs.framework.connectors.data.mapper.PamirsMapper: info
+    pro.shushi.pamirs.framework.connectors.data.mapper.GenericMapper: info # mybatis sql日志
+    RocketmqClient: error
+    org.apache.dubbo: error
+    org.apache.camel: error
+    pro.shushi.pamirs.sequence: warn
+    com.alibaba.cloud.dubbo.registry.DubboCloudRegistry: error
+    org.apache.dubbo.registry.client.metadata.store.RemoteMetadataServiceImpl: off
+    pro.shushi.pamirs.file.api.init.FileLifecycleCompletedInit: warn
+    org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext: info
+    pro.shushi.pamirs.file: error
+    pro.shushi.pamirs.framework.configure.annotation.core.version: debug
+
+cdn:
+  oss:
+    name: MINIO
+    type: MINIO
+    bucket: pamirs
+    uploadUrl: http://xxxxx
+    downloadUrl: http://xxxxx
+    accessKeyId: xxxxx
+    accessKeySecret: xxxxx
+    mainDir: upload/demo/
+    validTime: 3600000
+    timeout: 600000
+    active: true
+    referer:
+    localFolderUrl:
+
+pamirs:
+  #  request:
+  #    thread:
+  #      core-size: 100
+  #      max-size: 100
+  #      keep-alive-time: 1000000000000
+  distribution:
+    ds: base
+  framework:
+    system:
+      system-ds-key: base
+      system-models:
+        - base.WorkerNode
+    data:
+      default-ds-key: biz_data
+      ds-map:
+        base: base
+    gateway:
+      statistics: true
+      show-doc: true
+    hook:
+      excludes:
+        - pro.shushi.pamirs.timezone.hook.TimezoneHookBefore
+        - pro.shushi.pamirs.timezone.hook.TimezoneHookAfter
+        - pro.shushi.pamirs.timezone.hook.TimezoneSessionInitHook
+        - pro.shushi.pamirs.translate.hook.TranslateAfterHook
+        - pro.shushi.pamirs.data.audit.core.session.DataAuditSessionHook
+        - pro.shushi.pamirs.data.audit.core.session.DataAuditUserLogHook
+  persistence:
+    global:
+      auto-create-database: true
+      auto-create-table: true
+  record:
+    sql:
+      store: ./record
+  datasource:
+    base:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://127.0.0.1:3306/oinone_base?useSSL=false&allowPublicKeyRetrieval=true&useServerPrepStmts=true&cachePrepStmts=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true
+      username: root
+      password: shushi@2019
+      initialSize: 5
+      maxActive: 200
+      minIdle: 5
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: false
+      maxOpenPreparedStatements: -1
+      asyncInit: true
+    biz_data:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://127.0.0.1:3306/oinone_biz_data?useSSL=false&allowPublicKeyRetrieval=true&useServerPrepStmts=true&cachePrepStmts=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true
+      username: root
+      password: shushi@2019
+      initialSize: 5
+      maxActive: 200
+      minIdle: 5
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: false
+      maxOpenPreparedStatements: -1
+      asyncInit: true
+  sharding:
+    define:
+      data-sources:
+        ds: biz_data
+      models:
+        "[trigger.PamirsSchedule]":
+          tables: 0..13
+  plus:
+    configuration:
+      map-underscore-to-camel-case: false
+      cache-enabled: false
+  mapper:
+    static-model-config-locations:
+      - pro.shushi.pamirs
+    batch: collectionCommit
+    global:
+      table-info:
+        logic-delete: true
+        logic-delete-column: is_deleted
+        logic-delete-value: REPLACE(unix_timestamp(NOW(6)),'.','')
+        logic-not-delete-value: 0
+        optimistic-locker: false
+        optimistic-locker-column: opt_version
+        key-generator: DISTRIBUTION
+      table-pattern: '${moduleAbbr}_%s'
+      table-name-case-insensitive: true
+  meta:
+    metaPackages:
+      - pro.shushi.pamirs.trigger.model
+    relation:
+      pk-id: false
+  elastic:
+    url: 127.0.0.1:9200
+  #    version: 7
+  #    user: admin
+  #    password: admin
+  #    trustSelfSigned: true
+  #    useSSL: true
+  channel:
+    zkServers: 127.0.0.1:2181
+    packages:
+      - pro.shushi.pamirs
+  web:
+    enableCache: true
+  zookeeper:
+    zkConnectString: 127.0.0.1:2181
+    zkSessionTimeout: 60000
+    rootPath: /oinone/backend
+  event:
+    enabled: true
+    topic-prefix: os
+    notify-map:
+      system: ROCKETMQ
+      biz: ROCKETMQ
+      logger: ROCKETMQ
+    schedule:
+      enabled: true
+  view:
+    auto-create-default-view: true
+  file:
+    auto-create-template: false
+    auto-upload-logo: false
+    import-property:
+      default-each-import: false # 默认逐行导入
+      max-error-length: 100 # 默认最大收集错误行数
+    export-property:
+      default-clear-export-style: false # 默认使用csv导出
+      csv-max-support-length: 1000000 # csv导出最大支持1000000行
+  boot:
+    init: true
+    sync: true
+    mode: dev
+    modules:
+      - base
+      - resource
+      - common
+      - user
+      - auth
+      - management_center
+      - message
+      - file
+      - international
+      - trigger
+      - business
+      - sequence
+      - eip
+      - translate
+      - expression
+      - sys_setting
+      - my_center
+      - apps
+      - channel
+      - sql_record
+  auth:
+    fun-filter:
+      - namespace: user.PamirsUserTransient
+        fun: login
+      - namespace: user.TopBarLangTransientModel
+        fun: activeLang
+      - namespace: user.PamirsUserTransient
+        fun: mizarLogin
+      - namespace: user.PamirsUserTransient
+        fun: loginByVerificationCode
+      - namespace: user.PamirsUserTransient
+        fun: refreshPicCode
+      - namespace: user.PamirsUserTransient
+        fun: loginVerificationCode
+      - namespace: user.PamirsUserTransient
+        fun: signUpVerificationCode
+      - namespace: resource.ResourceRegion
+        fun: fetchRegionDownloadUrl
+      - namespace: resource.major.ResourceMajorConfig
+        fun: majorConfig
+      - namespace: base.AppConfig
+        fun: queryListByWrapper
+      - namespace: apps.AppMenu
+        fun: queryListByWrapper
+  eip:
+    enabled: true
+    http:
+      max-total-connections: 1000
+    open-api:
+      enabled: true
+      expires: 7200L
+      route:
+        host: 127.0.0.1
+        port: 8081
+        aes-key: 6/whOst2CXbxmISUBz9+ayLwmNHsgSqbrNL2xGRMfe8=

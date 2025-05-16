@@ -1,0 +1,48 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: oinone-backend-starter
+
+pamirs:
+  default:
+    environment-check: true
+
+---
+spring:
+  profiles: dev
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    config:
+      enabled: false
+      uri: http://127.0.0.1:7001
+      label: master
+      profile: dev
+    nacos:
+      server-addr: http://127.0.0.1:8848
+      discovery:
+        enabled: false
+        namespace:
+        prefix: application
+        file-extension: yml
+      config:
+        enabled: false
+        namespace:
+        prefix: application
+        file-extension: yml
+dubbo:
+  application:
+    name: oinone-backend-starter
+    version: 1.0.0
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  protocol:
+    name: dubbo
+    port: -1
+    serialization: pamirs
+  scan:
+    base-packages: pro.shushi
+  cloud:
+    subscribed-services:
