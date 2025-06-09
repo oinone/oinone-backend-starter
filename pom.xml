@@ -6,7 +6,7 @@
 
     <groupId>pro.shushi.pamirs</groupId>
     <artifactId>oinone-backend-starter</artifactId>
-    <version>6.2.0</version>
+    <version>6.2.1</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -35,13 +35,13 @@
         <elasticsearch.version>8.4.1</elasticsearch.version>
 
         <!-- 平台基础 -->
-        <pamirs.middleware.version>6.2.0</pamirs.middleware.version>
-        <pamirs.k2.version>6.2.0</pamirs.k2.version>
-        <pamirs.framework.version>6.2.0</pamirs.framework.version>
-        <pamirs.boot.version>6.2.0</pamirs.boot.version>
+        <pamirs.middleware.version>6.2.1</pamirs.middleware.version>
+        <pamirs.k2.version>6.2.1</pamirs.k2.version>
+        <pamirs.framework.version>6.2.1</pamirs.framework.version>
+        <pamirs.boot.version>6.2.1</pamirs.boot.version>
 
         <!-- 平台功能 -->
-        <pamirs.core.version>6.2.0</pamirs.core.version>
+        <pamirs.core.version>6.2.1</pamirs.core.version>
     </properties>
 
     <modules>
